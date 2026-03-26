@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)file:///C:/Users/shoht/Downloads/claude-journal_5.html -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Weekly Report</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;min-height:100vh;color:#1a1a1a}
+.app{max-width:680px;margin:0 auto;padding:1rem}
+.header{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:18px;font-weight:600}
+.badge{font-size:11px;background:#e8f0fe;color:#1a73e8;padding:3px 10px;border-radius:20px}
+.tabs{display:flex;gap:6px;margin-bottom:1rem}
+.tab{flex:1;padding:8px 4px;background:#fff;border:1px solid #e8e8e8;border-radius:8px;font-size:12px;color:#666;cursor:pointer;text-align:center;transition:all 0.15s}
+.tab.active{background:#1a73e8;color:#fff;border-color:#1a73e8;font-weight:500}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:0.75rem}
+.card-title{font-size:15px;font-weight:600;margin-bottom:0.75rem}
+.row{display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0;border-bottom:1px solid #f0f0f0}
+.row:last-child{border-bottom:none;padding-bottom:0}
+.row-label{font-size:14px;font-weight:500}
+.row-sub{font-size:12px;color:#888;margin-top:2px}
+.field-wrap{margin-top:10px}
+.field-wrap input{width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#f9f9f9;color:#1a1a1a;font-family:monospace}
+.field-wrap input:focus{outline:none;border-color:#1a73e8;background:#fff}
+.btn{display:inline-block;margin-top:8px;padding:8px 16px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#333;font-size:13px;cursor:pointer}
+.btn:hover{background:#f5f5f5}
+.btn-primary{width:100%;padding:11px;font-size:14px;font-weight:500;margin-top:10px;border-radius:8px;cursor:pointer;border:none;background:#1a73e8;color:#fff}
+.btn-primary:hover{background:#1557b0}
+.btn-primary:disabled{background:#ccc;cursor:not-allowed}
+.btn-success{width:100%;padding:11px;font-size:14px;font-weight:500;margin-top:10px;border-radius:8px;cursor:pointer;border:none;background:#0f9d58;color:#fff}
+.btn-success:hover{background:#0b7a45}
+.status-chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 10px;border-radius:20px}
+.chip-ok{background:#e6f4ea;color:#137333}
+.chip-ng{background:#fce8e6;color:#c5221f}
+.chip-wait{background:#fff8e1;color:#b06000}
+.dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.stat-card{background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:0.75rem;text-align:center}
+.stat-num{font-size:24px;font-weight:600;color:#1a1a1a}
+.stat-label{font-size:11px;color:#888;margin-top:2px}
+.search-wrap{display:flex;gap:8px;margin-bottom:1rem}
+.search-wrap input{flex:1;padding:9px 14px;border:1px solid #ddd;border-radius:8px;font-size:14px;background:#fff}
+.search-wrap input:focus{outline:none;border-color:#1a73e8}
+.week-label{font-size:12px;font-weight:600;color:#666;padding:0.5rem 0 0.25rem;border-bottom:1px solid #f0f0f0;margin-bottom:0.75rem}
+.topic-item{display:flex;align-items:flex-start;gap:10px;padding:0.65rem 0;border-bottom:1px solid #f5f5f5;cursor:pointer}
+.topic-item:last-child{border-bottom:none;padding-bottom:0}
+.topic-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.topic-title{font-size:14px;font-weight:500;line-height:1.4}
+.topic-meta{font-size:12px;color:#888;margin-top:3px}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;margin-right:4px;background:#e8f0fe;color:#1a73e8}
+.topic-detail{display:none;background:#f9f9f9;border-radius:8px;padding:0.75rem;margin-top:0.5rem;font-size:13px;color:#555;line-height:1.7}
+.chat-wrap{display:flex;flex-direction:column;min-height:350px}
+.chat-messages{flex:1;padding-bottom:1rem}
+.chat-msg{display:flex;gap:10px;margin-bottom:1rem}
+.chat-msg.user{flex-direction:row-reverse}
+.msg-bubble{max-width:80%;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.6}
+.ai-bubble{background:#f0f0f0;color:#1a1a1a;border-bottom-left-radius:4px}
+.user-bubble{background:#1a73e8;color:#fff;border-bottom-right-radius:4px}
+.avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.ai-av{background:#e8f5e9;color:#2e7d32}
+.user-av{background:#e8f0fe;color:#1a73e8}
+.input-wrap{display:flex;gap:8px;background:#fff;border:1px solid #ddd;border-radius:12px;padding:8px 12px;margin-top:0.5rem}
+.input-wrap textarea{flex:1;border:none;background:transparent;font-size:14px;color:#1a1a1a;resize:none;outline:none;font-family:inherit;line-height:1.5}
+.send-btn{padding:7px 16px;background:#1a73e8;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;align-self:flex-end}
+.loading{text-align:center;padding:1rem;color:#888;font-size:13px}
+.highlight{background:#fff3cd;padding:0 2px;border-radius:2px}
+.empty{text-align:center;padding:2rem;color:#aaa;font-size:14px}
+.notice{background:#fff8e1;border-left:3px solid #f9a825;padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:13px;color:#5f4c00;margin-bottom:0.75rem;line-height:1.6}
+.import-area{width:100%;min-height:160px;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#f9f9f9;color:#1a1a1a;font-family:inherit;line-height:1.6;resize:vertical;margin-top:8px}
+.import-area:focus{outline:none;border-color:#1a73e8;background:#fff}
+.result-box{background:#f9f9f9;border-radius:10px;padding:1rem;margin-top:1rem;border:1px solid #e8e8e8}
+.result-label{font-size:11px;font-weight:700;color:#1a73e8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem}
+.intent-box{background:#e8f0fe;border-radius:8px;padding:0.75rem 1rem;font-size:14px;color:#1a1a1a;line-height:1.6;font-weight:500;margin-bottom:1rem}
+.timeline-step{display:flex;gap:10px;margin-bottom:0.65rem}
+.step-num{width:22px;height:22px;border-radius:50%;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-q{background:#1a73e8}
+.step-a{background:#0f9d58}
+.step-content{flex:1;font-size:13px;color:#333;line-height:1.6}
+.step-role{font-size:10px;font-weight:700;margin-bottom:2px}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>Claude Weekly Report</h1>
+    <span class="badge" id="weekBadge">第13週 | 3月23日〜3月29日</span>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(&#39;journal&#39;)">履歴</div>
+    <div class="tab" onclick="switchTab(&#39;import&#39;)">取り込み</div>
+    <div class="tab" onclick="switchTab(&#39;chat&#39;)">チャット</div>
+    <div class="tab" onclick="switchTab(&#39;settings&#39;)">設定</div>
+  </div>
+
+  <!-- 履歴 -->
+  <div class="panel active" id="panel-journal">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-num" id="totalWeeks">1</div><div class="stat-label">週の記録</div></div>
+      <div class="stat-card"><div class="stat-num" id="totalTopics">1</div><div class="stat-label">トピック数</div></div>
+      <div class="stat-card"><div class="stat-num" id="totalMsgs">2</div><div class="stat-label">やり取り数</div></div>
+    </div>
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="キーワードで検索..." oninput="renderJournal(this.value)">
+    </div>
+    <div id="journalContent"><div class="card"><div class="week-label">3月17日〜3月23日</div><div class="topic-item" onclick="toggleDetail(this)">
+        <div class="topic-dot" style="background:#7b1fa2"></div>
+        <div style="flex:1">
+          <div class="topic-title">Claude Journalアプリの開発とGoogle Drive連携</div>
+          <div class="topic-meta">3/26&nbsp;<span class="tag">アプリ開発</span><span class="tag">Google Drive</span><span class="tag">OAuth</span></div>
+          <div class="topic-detail"><div style="margin-bottom:0.6rem"><div style="font-size:11px;font-weight:700;color:#1a73e8;margin-bottom:4px">質問の意図</div><div style="background:#e8f0fe;border-radius:6px;padding:8px 10px;font-size:13px;line-height:1.6">Claudeとのチャット履歴を週ごとに自動整理・保存し、スマホからもキーワード検索できるアプリを作りたかった。</div></div><div><div style="font-size:11px;font-weight:700;color:#1a73e8;margin-bottom:6px">やり取りの流れ</div><div style="display:flex;gap:8px;margin-bottom:6px">
+            <div style="width:20px;height:20px;border-radius:50%;background:#1a73e8;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">1</div>
+            <div style="flex:1"><div style="font-size:10px;font-weight:700;color:#1a73e8;margin-bottom:1px">質問</div><div style="font-size:13px;line-height:1.5">Claudeとのやり取りを週1回まとめてひとつの場所に保存し、キーワード検索できるアプリを作れるか？</div></div>
+          </div><div style="display:flex;gap:8px;margin-bottom:6px">
+            <div style="width:20px;height:20px;border-radius:50%;background:#0f9d58;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">2</div>
+            <div style="flex:1"><div style="font-size:10px;font-weight:700;color:#0f9d58;margin-bottom:1px">回答</div><div style="font-size:13px;line-height:1.5">要件確認の上、Claude APIを使ったチャット・履歴管理アプリをHTMLで作成。</div></div>
+          </div><div style="display:flex;gap:8px;margin-bottom:6px">
+            <div style="width:20px;height:20px;border-radius:50%;background:#1a73e8;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">3</div>
+            <div style="flex:1"><div style="font-size:10px;font-weight:700;color:#1a73e8;margin-bottom:1px">質問</div><div style="font-size:13px;line-height:1.5">Google Driveへの完全自動エクスポートを実現したい。</div></div>
+          </div><div style="display:flex;gap:8px;margin-bottom:6px">
+            <div style="width:20px;height:20px;border-radius:50%;background:#0f9d58;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">4</div>
+            <div style="flex:1"><div style="font-size:10px;font-weight:700;color:#0f9d58;margin-bottom:1px">回答</div><div style="font-size:13px;line-height:1.5">Google Cloud ConsoleでOAuth設定、GitHub Pagesでホスティングし、Drive APIと連携する方法を手順ごとにサポート。</div></div>
+          </div></div></div>
+        </div>
+      </div></div></div>
+  </div>
+
+  <!-- 取り込み -->
+  <div class="panel" id="panel-import">
+    <div class="card">
+      <div class="card-title">claude.ai のやり取りを取り込む</div>
+      <div class="notice">claude.ai でのチャット内容をそのままコピーして貼り付けてください。AIがすべての質問の意図と時系列を自動分析します。</div>
+      <div style="font-size:13px;color:#555;margin-bottom:4px">チャット内容を貼り付け</div>
+      <textarea class="import-area" id="importText" placeholder="claude.ai からコピーした会話テキストをそのまま貼り付けてください。
+
+Q: と A: の形式でも、会話そのままでもOKです。"></textarea>
+      <button class="btn-primary" onclick="analyzeImport()" id="analyzeBtn">AIで要約・分析する</button>
+    </div>
+
+    <div id="importResult" style="display:none">
+      <div class="result-box">
+        <div class="result-label">質問の意図（何を解決しようとしていたか）</div>
+        <div class="intent-box" id="intentText"></div>
+        <div class="result-label">やり取りの時系列</div>
+        <div id="timelineSteps"></div>
+      </div>
+      <button class="btn-success" onclick="saveImport()">この内容を履歴に保存する</button>
+      <button class="btn" style="width:100%;margin-top:6px" onclick="clearImport()">クリアしてやり直す</button>
+    </div>
+  </div>
+
+  <!-- チャット -->
+  <div class="panel" id="panel-chat">
+    <div class="chat-wrap">
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="input-wrap">
+        <textarea id="chatInput" rows="2" placeholder="メッセージを入力..." onkeydown="handleKey(event)"></textarea>
+        <button class="send-btn" onclick="sendMsg()">送信</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 設定 -->
+  <div class="panel" id="panel-settings">
+    <div class="card">
+      <div class="card-title">Cloudflare Proxy</div>
+      <div class="row">
+        <div><div class="row-label">Proxy URL</div><div class="row-sub">weeklyreport.shohtaujiie.workers.dev</div></div>
+        <span class="status-chip" id="proxyChip"><span class="dot"></span>未設定</span>
+      </div>
+      <div class="field-wrap">
+        <input type="text" id="proxyUrlInput" placeholder="https://weeklyreport.shohtaujiie.workers.dev">
+      </div>
+      <button class="btn" onclick="saveProxyUrl()">保存</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Claude API</div>
+      <div class="row">
+        <div><div class="row-label">APIキー</div><div class="row-sub">console.anthropic.com で取得</div></div>
+        <span class="status-chip chip-ok" id="claudeChip"><span class="dot"></span>設定済み</span>
+      </div>
+      <div class="field-wrap"><input type="password" id="apiKeyInput" placeholder="sk-ant-..."></div>
+      <button class="btn" onclick="saveApiKey()">保存</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Google Drive 連携</div>
+      <div class="notice">このHTMLファイルをブラウザで直接開いた状態で接続してください。</div>
+      <div class="row">
+        <div><div class="row-label">接続状態</div></div>
+        <span class="status-chip chip-wait" id="driveChip"><span class="dot"></span>ID設定済み</span>
+      </div>
+      <div class="row">
+        <div><div class="row-label">Google Client ID</div><div class="row-sub">Google Cloud Console で取得</div></div>
+      </div>
+      <div class="field-wrap"><input type="text" id="clientIdInput" placeholder="xxxxx.apps.googleusercontent.com"></div>
+      <button class="btn" onclick="saveClientId()">Client ID を保存</button>
+      <button class="btn-primary" onclick="connectDrive()">Google Drive に接続する</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">週次エクスポート</div>
+      <div class="row">
+        <div><div class="row-label">保存先</div><div class="row-sub">Google Drive のマイドライブ直下</div></div>
+        <span style="font-size:13px;color:#888">.md形式</span>
+      </div>
+      <button class="btn-success" onclick="exportToDrive()">今すぐ Google Drive にエクスポート</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SAMPLE = [
+  {week:"2026/W12",label:"3月17日〜3月23日",topics:[
+    {
+      title:"Claude Journalアプリの開発とGoogle Drive連携",
+      intent:"Claudeとのチャット履歴を週ごとに自動整理・保存し、スマホからもキーワード検索できるアプリを作りたかった。",
+      timeline:[
+        {role:"Q",text:"Claudeとのやり取りを週1回まとめてひとつの場所に保存し、キーワード検索できるアプリを作れるか？"},
+        {role:"A",text:"要件確認の上、Claude APIを使ったチャット・履歴管理アプリをHTMLで作成。"},
+        {role:"Q",text:"Google Driveへの完全自動エクスポートを実現したい。"},
+        {role:"A",text:"Google Cloud ConsoleでOAuth設定、GitHub Pagesでホスティングし、Drive APIと連携する方法を手順ごとにサポート。"}
+      ],
+      tags:["アプリ開発","Google Drive","OAuth"],color:"#7b1fa2",date:"3/26"
+    }
+  ]}
+];
+
+let data = JSON.parse(localStorage.getItem('cj_data')||'null')||SAMPLE;
+let apiKey = localStorage.getItem('cj_apikey')||'';
+let clientId = localStorage.getItem('cj_clientid')||'';
+let googleToken = null;
+let chatHistory = [];
+let pendingImport = null;
+let proxyUrl = localStorage.getItem('cj_proxyurl') || '';
+
+function init(){
+  document.getElementById('apiKeyInput').value = apiKey;
+  document.getElementById('clientIdInput').value = clientId;
+  document.getElementById('proxyUrlInput').value = proxyUrl;
+  updateClaudeChip(); updateDriveChip(); updateStats(); renderJournal('');
+  const now = new Date();
+  document.getElementById('weekBadge').textContent = `第${getWeekNum(now)}週 | ${getWeekRange(now)}`;
+  if(location.hash.includes('access_token')){
+    const params = new URLSearchParams(location.hash.substring(1));
+    googleToken = params.get('access_token');
+    history.replaceState(null,'',location.pathname);
+    updateDriveChip();
+    alert('Google Drive への接続が完了しました！');
+  }
+}
+
+function updateClaudeChip(){
+  const c=document.getElementById('claudeChip');
+  if(apiKey){c.className='status-chip chip-ok';c.innerHTML='<span class="dot"></span>設定済み';}
+  else{c.className='status-chip chip-ng';c.innerHTML='<span class="dot"></span>未設定';}
+}
+
+function updateDriveChip(){
+  const c=document.getElementById('driveChip');
+  if(googleToken){c.className='status-chip chip-ok';c.innerHTML='<span class="dot"></span>接続済み';}
+  else if(clientId){c.className='status-chip chip-wait';c.innerHTML='<span class="dot"></span>ID設定済み';}
+  else{c.className='status-chip chip-ng';c.innerHTML='<span class="dot"></span>未接続';}
+}
+
+function saveProxyUrl(){
+  proxyUrl = document.getElementById('proxyUrlInput').value.trim().replace(/\/$/,'');
+  localStorage.setItem('cj_proxyurl', proxyUrl);
+  alert('Proxy URLを保存しました');
+}
+
+function saveApiKey(){
+  apiKey=document.getElementById('apiKeyInput').value.trim();
+  localStorage.setItem('cj_apikey',apiKey);
+  updateClaudeChip(); alert('APIキーを保存しました');
+}
+
+function saveClientId(){
+  clientId=document.getElementById('clientIdInput').value.trim();
+  localStorage.setItem('cj_clientid',clientId);
+  updateDriveChip();
+  alert('Client IDを保存しました。次に「Google Drive に接続する」を押してください。');
+}
+
+function connectDrive(){
+  if(!clientId){alert('先にClient IDを入力・保存してください');return;}
+  const redirectUri=location.href.split('#')[0].split('?')[0];
+  location.href=`https://accounts.google.com/o/oauth2/v2/auth`
+    +`?client_id=${encodeURIComponent(clientId)}`
+    +`&redirect_uri=${encodeURIComponent(redirectUri)}`
+    +`&response_type=token`
+    +`&scope=${encodeURIComponent('https://www.googleapis.com/auth/drive.file')}`
+    +`&prompt=consent`;
+}
+
+async function analyzeImport(){
+  const text=document.getElementById('importText').value.trim();
+  if(!text){alert('チャット内容を貼り付けてください');return;}
+  if(!apiKey){alert('設定タブでAPIキーを先に入力してください');return;}
+  const btn=document.getElementById('analyzeBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>AI分析中...';
+
+  const prompt=`以下は複数のClaudeとのチャット履歴です。セッション（会話のまとまり）ごとに分けて分析し、JSON配列形式のみで返してください（説明文・マークダウン・コードブロック不要）。
+
+[
+  {
+    "title": "セッションの短いタイトル（20文字以内）",
+    "intent": "このセッションでユーザーが何を解決・実現しようとしていたかを3〜5文で詳しく説明",
+    "timeline": [
+      {"role": "Q", "text": "質問の内容を具体的に2〜3文で説明"},
+      {"role": "A", "text": "回答の内容・結果を具体的に2〜3文で説明"}
+    ],
+    "tags": ["タグ1", "タグ2", "タグ3"]
+  }
+]
+
+ルール：
+- チャット履歴に複数の異なるトピック・セッションが含まれる場合は必ず別々のオブジェクトに分けること
+- セッションの区切りはトピックの切り替わりで判断すること
+- 各セッションのtimelineはそのセッション内のすべての質問を取り上げて時系列で並べること
+- QとAを交互に並べ、会話の流れがわかるようにすること
+- 各textは具体的な内容・結果がわかるよう2〜3文で詳しく書くこと（「〜を質問した」ではなく実際の内容を書く）
+- intentも表面的な要約ではなく、背景・目的・結果まで含めて詳しく書くこと
+
+チャット内容：
+${text}`;
+
+  try{
+    const endpoint = proxyUrl ? proxyUrl : 'https://api.anthropic.com/v1/messages';
+    const payload = {model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:prompt}]};
+    if(proxyUrl) payload.apiKey = apiKey;
+    const res=await fetch(endpoint,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    const d=await res.json();
+    const raw=d.content?.[0]?.text||'';
+    const jsonStr=raw.replace(/```json|```/g,'').trim();
+    pendingImport=JSON.parse(jsonStr);
+    showResult(pendingImport);
+  }catch(e){
+    alert('分析に失敗しました。APIキーとチャット内容を確認してください。\n'+e.message);
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='AIで要約・分析する';
+  }
+}
+
+function showResult(parsed){
+  document.getElementById('importResult').style.display='block';
+  const sessions = Array.isArray(parsed) ? parsed : [parsed];
+  document.getElementById('intentText').textContent = sessions.length > 1
+    ? `${sessions.length}件のセッションを検出しました`
+    : (sessions[0].intent||'');
+  const el=document.getElementById('timelineSteps');
+  el.innerHTML='';
+  sessions.forEach((session, si)=>{
+    if(sessions.length > 1){
+      el.innerHTML+=`<div style="margin:${si>0?'1.2rem':0} 0 0.5rem;padding:0.5rem 0.75rem;background:#e8f0fe;border-radius:6px;font-size:13px;font-weight:600;color:#1a73e8">
+        セッション ${si+1}：${session.title||''}
+      </div>
+      <div style="font-size:12px;color:#555;margin-bottom:0.5rem;padding:0 0.25rem;line-height:1.6">${session.intent||''}</div>`;
+    }
+    (session.timeline||[]).forEach((step,i)=>{
+      const isQ=step.role==='Q';
+      el.innerHTML+=`<div class="timeline-step">
+        <div class="step-num ${isQ?'step-q':'step-a'}">${i+1}</div>
+        <div class="step-content">
+          <div class="step-role" style="color:${isQ?'#1a73e8':'#0f9d58'}">${isQ?'質問':'回答'}</div>
+          ${step.text}
+        </div>
+      </div>`;
+    });
+  });
+}
+
+function saveImport(){
+  if(!pendingImport)return;
+  const now=new Date();
+  const wk=`${now.getFullYear()}/W${String(getWeekNum(now)).padStart(2,'0')}`;
+  let entry=data.find(w=>w.week===wk);
+  if(!entry){entry={week:wk,label:getWeekRange(now),topics:[]};data.unshift(entry);}
+  const sessions = Array.isArray(pendingImport) ? pendingImport : [pendingImport];
+  sessions.forEach(session=>{
+    entry.topics.push({
+      title:session.title||'取り込んだやり取り',
+      intent:session.intent||'',
+      timeline:session.timeline||[],
+      tags:session.tags||['取り込み'],
+      color:'#7b1fa2',
+      date:`${now.getMonth()+1}/${now.getDate()}`
+    });
+  });
+  localStorage.setItem('cj_data',JSON.stringify(data));
+  updateStats(); renderJournal(''); clearImport();
+  alert(`${sessions.length}件のセッションを履歴に保存しました！`);
+  switchTab('journal');
+}
+
+function clearImport(){
+  document.getElementById('importText').value='';
+  document.getElementById('importResult').style.display='none';
+  pendingImport=null;
+}
+
+function updateStats(){
+  document.getElementById('totalWeeks').textContent=data.length;
+  document.getElementById('totalTopics').textContent=data.reduce((s,w)=>s+w.topics.length,0);
+  document.getElementById('totalMsgs').textContent=data.reduce((s,w)=>s+w.topics.reduce((ss,t)=>ss+(t.timeline?t.timeline.filter(s=>s.role==='Q').length:1),0),0);
+}
+
+function renderJournal(q){
+  const el=document.getElementById('journalContent');
+  const query=q.trim().toLowerCase();
+  let html='';
+  data.forEach(week=>{
+    let wh='';
+    week.topics.forEach(t=>{
+      const searchText=(t.title+(t.intent||'')+(t.timeline||[]).map(s=>s.text).join('')+(t.tags||[]).join('')).toLowerCase();
+      if(query&&!searchText.includes(query))return;
+      const hi=s=>query?s.replace(new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<span class="highlight">${m}</span>`):s;
+      let detail='';
+      if(t.intent) detail+=`<div style="margin-bottom:0.6rem"><div style="font-size:11px;font-weight:700;color:#1a73e8;margin-bottom:4px">質問の意図</div><div style="background:#e8f0fe;border-radius:6px;padding:8px 10px;font-size:13px;line-height:1.6">${hi(t.intent)}</div></div>`;
+      if(t.timeline&&t.timeline.length){
+        detail+=`<div><div style="font-size:11px;font-weight:700;color:#1a73e8;margin-bottom:6px">やり取りの流れ</div>`;
+        t.timeline.forEach((step,i)=>{
+          const isQ=step.role==='Q';
+          detail+=`<div style="display:flex;gap:8px;margin-bottom:6px">
+            <div style="width:20px;height:20px;border-radius:50%;background:${isQ?'#1a73e8':'#0f9d58'};color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${i+1}</div>
+            <div style="flex:1"><div style="font-size:10px;font-weight:700;color:${isQ?'#1a73e8':'#0f9d58'};margin-bottom:1px">${isQ?'質問':'回答'}</div><div style="font-size:13px;line-height:1.5">${hi(step.text)}</div></div>
+          </div>`;
+        });
+        detail+=`</div>`;
+      } else if(t.summary){detail+=hi(t.summary);}
+      wh+=`<div class="topic-item" onclick="toggleDetail(this)">
+        <div class="topic-dot" style="background:${t.color}"></div>
+        <div style="flex:1">
+          <div class="topic-title">${hi(t.title)}</div>
+          <div class="topic-meta">${t.date}&nbsp;${(t.tags||[]).map(g=>`<span class="tag">${hi(g)}</span>`).join('')}</div>
+          <div class="topic-detail">${detail}</div>
+        </div>
+      </div>`;
+    });
+    if(wh) html+=`<div class="card"><div class="week-label">${week.label}</div>${wh}</div>`;
+  });
+  el.innerHTML=html||`<div class="empty">${query?'「'+q+'」の検索結果なし':'記録がありません'}</div>`;
+}
+
+function toggleDetail(el){
+  const d=el.querySelector('.topic-detail');
+  d.style.display=d.style.display==='block'?'none':'block';
+}
+
+function switchTab(name){
+  ['journal','import','chat','settings'].forEach((n,i)=>{
+    document.querySelectorAll('.tab')[i].classList.toggle('active',n===name);
+    document.getElementById('panel-'+n).classList.toggle('active',n===name);
+  });
+}
+
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
+
+function addBubble(role,text){
+  const el=document.getElementById('chatMessages');
+  const isUser=role==='user';
+  el.innerHTML+=`<div class="chat-msg ${isUser?'user':''}">
+    <div class="avatar ${isUser?'user-av':'ai-av'}">${isUser?'翔':'AI'}</div>
+    <div class="msg-bubble ${isUser?'user-bubble':'ai-bubble'}">${text.replace(/\n/g,'<br>')}</div>
+  </div>`;
+  el.scrollTop=el.scrollHeight;
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('chatInput');
+  const text=inp.value.trim();
+  if(!text)return;
+  if(!apiKey){alert('設定タブでAPIキーを入力してください');return;}
+  inp.value='';
+  addBubble('user',text);
+  chatHistory.push({role:'user',content:text});
+  const ld=document.createElement('div');
+  ld.className='loading';ld.id='ld';ld.textContent='考え中...';
+  document.getElementById('chatMessages').appendChild(ld);
+  try{
+    const endpoint2 = proxyUrl ? proxyUrl : 'https://api.anthropic.com/v1/messages';
+    const payload2 = {model:'claude-sonnet-4-20250514',max_tokens:1000,system:'あなたは職業訓練指導員の業務を支援するAIアシスタントです。日本語で丁寧に回答してください。',messages:chatHistory};
+    if(proxyUrl) payload2.apiKey = apiKey;
+    const res=await fetch(endpoint2,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload2)
+    });
+    document.getElementById('ld')?.remove();
+    const d=await res.json();
+    const reply=d.content?.[0]?.text||'エラーが発生しました';
+    chatHistory.push({role:'assistant',content:reply});
+    addBubble('ai',reply);
+    autoSaveChat(text,reply);
+  }catch(e){
+    document.getElementById('ld')?.remove();
+    addBubble('ai','通信エラーが発生しました。');
+  }
+}
+
+function autoSaveChat(q,a){
+  const now=new Date();
+  const wk=`${now.getFullYear()}/W${String(getWeekNum(now)).padStart(2,'0')}`;
+  let entry=data.find(w=>w.week===wk);
+  if(!entry){entry={week:wk,label:getWeekRange(now),topics:[]};data.unshift(entry);}
+  entry.topics.push({
+    title:q.length>25?q.slice(0,25)+'...':q,
+    intent:q,
+    timeline:[{role:'Q',text:q},{role:'A',text:a.length>150?a.slice(0,150)+'...':a}],
+    tags:['チャット'],color:'#1a73e8',
+    date:`${now.getMonth()+1}/${now.getDate()}`
+  });
+  localStorage.setItem('cj_data',JSON.stringify(data));
+  updateStats();
+}
+
+function buildMarkdown(){
+  let md=`# Claude Weekly Report\n生成日: ${new Date().toLocaleDateString('ja-JP')}\n\n`;
+  data.forEach(w=>{
+    md+=`## ${w.label}\n\n`;
+    w.topics.forEach(t=>{
+      md+=`### ${t.title}\n**日付**: ${t.date}  **タグ**: ${(t.tags||[]).join(', ')}\n\n`;
+      if(t.intent) md+=`**質問の意図**: ${t.intent}\n\n`;
+      if(t.timeline&&t.timeline.length){
+        md+=`**やり取りの流れ**\n\n`;
+        t.timeline.forEach((s,i)=>{md+=`${i+1}. **${s.role==='Q'?'質問':'回答'}**: ${s.text}\n`;});
+        md+='\n';
+      }
+      md+=`---\n\n`;
+    });
+  });
+  return md;
+}
+
+async function getOrCreateFolder(name){
+  const q=encodeURIComponent(`name='${name}' and mimeType='application/vnd.google-apps.folder' and trashed=false`);
+  const searchRes=await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)`,{
+    headers:{'Authorization':'Bearer '+googleToken}
+  });
+  const searchData=await searchRes.json();
+  if(searchData.files&&searchData.files.length>0) return searchData.files[0].id;
+  const createRes=await fetch('https://www.googleapis.com/drive/v3/files',{
+    method:'POST',
+    headers:{'Authorization':'Bearer '+googleToken,'Content-Type':'application/json'},
+    body:JSON.stringify({name,mimeType:'application/vnd.google-apps.folder'})
+  });
+  const folder=await createRes.json();
+  return folder.id;
+}
+
+async function exportToDrive(){
+  if(!googleToken){alert('先に設定タブでGoogle Driveに接続してください');return;}
+  try{
+    const folderId=await getOrCreateFolder('Claude_weekly_report');
+    const md=buildMarkdown();
+    const filename=`claude-weekly-report-${new Date().toISOString().slice(0,10)}.md`;
+    const boundary='cj_b_'+Date.now();
+    const meta=JSON.stringify({name:filename,mimeType:'text/markdown',parents:[folderId]});
+    const body=`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${meta}\r\n--${boundary}\r\nContent-Type: text/markdown\r\n\r\n${md}\r\n--${boundary}--`;
+    const res=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+googleToken,'Content-Type':`multipart/related; boundary=${boundary}`},
+      body
+    });
+    if(res.ok){alert(`Google Drive に保存しました！\nマイドライブ / Claude_weekly_report / ${filename}`);}
+    else{
+      const err=await res.json();
+      if(err.error?.status==='UNAUTHENTICATED'){googleToken=null;updateDriveChip();alert('認証が切れました。再接続してください。');}
+      else{alert('エラー: '+(err.error?.message||''));}
+    }
+  }catch(e){alert('通信エラー: '+e.message);}
+}
+
+function getWeekNum(d){
+  const jan1=new Date(d.getFullYear(),0,1);
+  return Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7);
+}
+function getWeekRange(d){
+  const day=d.getDay();
+  const mon=new Date(d);mon.setDate(d.getDate()-(day||7)+1);
+  const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  const f=dt=>`${dt.getMonth()+1}月${dt.getDate()}日`;
+  return `${f(mon)}〜${f(sun)}`;
+}
+
+init();
+</script>
+
+
+</body></html>
